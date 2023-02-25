@@ -14,6 +14,12 @@ class Meal(models.Model):
     def __str__(self):
         return self.meal_type
 
+class Calories(models.Model):
+    calorie_amt = models.IntegerField(unique=True)
+    points = models.IntegerField(default=20, blank=False, null=False)
+
+    def __str__(self):
+        return self.calorie_amt
 
 class GameType(models.Model):
     game_type = models.CharField(max_length=50, unique=True)
@@ -22,6 +28,13 @@ class GameType(models.Model):
     def __str__(self):
         return self.game_type
 
+class UserGameType(models.Model):
+    player = models.ForeignKey(User, on_delete=models.CASCADE)
+    game_type = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return (self.player + '_' + self.game_type)
+
 class UserMeals(models.Model):
     player = models.ForeignKey(User, on_delete=models.CASCADE) 
     meal = models.ForeignKey(Meal, on_delete=models.CASCADE)
@@ -29,7 +42,16 @@ class UserMeals(models.Model):
     meal_time = models.TimeField(default=timezone.now)
 
     def __str__(self):
-        return (self.player + self.meal + str(self.meal_date))
+        return (self.player + '_' + self.meal + '_' + str(self.meal_date))
+
+class UserCalories(models.Model):
+    player = models.ForeignKey(User, on_delete=models.CASCADE) 
+    calories = models.ForeignKey(Calories, on_delete=models.CASCADE)
+    meal_date = models.DateField(default=datetime.date.today)
+    meal_time = models.TimeField(default=timezone.now)
+
+    def __str__(self):
+        return (self.player + '_' + self.calories + '_' + str(self.meal_date))
 
 class UserPoints(models.Model):
     player = models.ForeignKey(User, on_delete=models.CASCADE) 
@@ -38,5 +60,9 @@ class UserPoints(models.Model):
     meal_date = models.DateField(default=datetime.date.today)
     meal_time = models.TimeField(default=timezone.now)
 
+    def calculate_points(self):
+        self.points = self.meal_type.points
+        self.save()
+
     def __str__(self):
-        return (self.player + self.meal + str(self.meal_date))
+        return (self.player + '_' + self.points + '_' + str(self.meal_date))
