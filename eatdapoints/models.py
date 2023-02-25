@@ -70,3 +70,11 @@ class UserPoints(models.Model):
 
     def __str__(self):
         return (self.player + '_' + self.points + '_' + str(self.meal_date))
+
+class UserMealPlan(models.Model):
+    player = models.ForeignKey(User, on_delete=models.CASCADE)
+    meal_type = models.ManyToManyField(Meal)
+
+class UserCalorieCount(models.Model):
+    player = models.ForeignKey(User, on_delete=models.CASCADE)
+    calorie_count = models.ForeignKey(Calories, on_delete=models.CASCADE)
