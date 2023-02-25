@@ -23,7 +23,7 @@ class Calories(models.Model):
     points = models.IntegerField(default=20, blank=False, null=False)
 
     def __str__(self):
-        return self.calorie_amt
+        return str(self.calorie_amt)
 
 class GameType(models.Model):
     game_type = models.CharField(max_length=50, unique=True)
@@ -37,7 +37,7 @@ class UserGameType(models.Model):
     game_type = models.CharField(max_length=25, choices=GAME_CHOICES, default="MealPlan")
 
     def __str__(self):
-        return (self.player + '_' + self.game_type)
+        return (self.player.username + '_' + self.game_type)
 
 class UserMeals(models.Model):
     player = models.ForeignKey(User, on_delete=models.CASCADE) 
@@ -46,7 +46,7 @@ class UserMeals(models.Model):
     meal_time = models.TimeField(default=timezone.now)
 
     def __str__(self):
-        return (self.player + '_' + self.meal + '_' + str(self.meal_date))
+        return (self.player.username + '_' + self.meal.meal_type + '_' + str(self.meal_date))
 
 class UserCalories(models.Model):
     player = models.ForeignKey(User, on_delete=models.CASCADE) 
@@ -55,7 +55,7 @@ class UserCalories(models.Model):
     meal_time = models.TimeField(default=timezone.now)
 
     def __str__(self):
-        return (self.player + '_' + self.calories + '_' + str(self.meal_date))
+        return (self.player.username + '_' + str(self.calories.calorie_amt) + '_' + str(self.meal_date))
 
 class UserPoints(models.Model):
     player = models.ForeignKey(User, on_delete=models.CASCADE) 
@@ -69,12 +69,18 @@ class UserPoints(models.Model):
         self.save()
 
     def __str__(self):
-        return (self.player + '_' + self.points + '_' + str(self.meal_date))
+        return (self.player.username + '_' + str(self.points) + '_' + str(self.meal_date))
 
 class UserMealPlan(models.Model):
     player = models.ForeignKey(User, on_delete=models.CASCADE)
     meal_type = models.ManyToManyField(Meal)
 
+    def __str__(self):
+        return (self.player.username)
+
 class UserCalorieCount(models.Model):
     player = models.ForeignKey(User, on_delete=models.CASCADE)
     calorie_count = models.ForeignKey(Calories, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return (self.player.username)
