@@ -15,8 +15,7 @@ def home_page(request):
     acct = UserGameType.objects.get(player=request.user)
     acct_type = acct.game_type
 
-    return render(request, 'eatdapoints/home_page.html', {'user_points': user_points, 'user_meals': user_meals, 'user_meals_all': user_meals_all, 'user_calories': user_calories, 'acct_type': acct_type})
-
+    return render(request, 'eatdapoints/templates/homepage.html', {'user_points': user_points, 'user_meals': user_meals, 'user_meals_all': user_meals_all, 'user_calories': user_calories, 'acct_type': acct_type})
 
 def meal_list(request):
     user_meal_list = UserMeals.objects.filter(player=request.user).order_by('-meal_date')
