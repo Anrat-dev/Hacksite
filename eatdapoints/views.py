@@ -9,8 +9,10 @@ def home_page(request):
     user_points = UserPoints.objects.filter(player=request.user).aggregate(Sum('points'))
     user_meals = UserMeals.objects.filter(player=request.user, meal_date=datetime.date.today).count()
     user_meals_all = UserMeals.objects.filter(player=request.user).count()
-    user_caloriess = UserCalories.objects.filter(player=request.user, meal_date=datetime.date.today).aggregate(Sum('calories'))
-    return render(request, 'eatdapoints/home_page.html', {'user_points': user_points, 'user_meals': user_meals, 'user_meals_all': user_meals_all, 'user_caloriess': user_caloriess})
+    user_calories = UserCalories.objects.filter(player=request.user, meal_date=datetime.date.today).aggregate(Sum('calories'))
+    acct = UserGameType.objects.get(player=request.user)
+    acct_type = acct.game_type
+    return render(request, 'eatdapoints/home_page.html', {'user_points': user_points, 'user_meals': user_meals, 'user_meals_all': user_meals_all, 'user_calories': user_calories})
 
 def meal_list(request):
     user_meal_list = UserMeals.objects.filter(player=request.user).order_by('-meal_date')

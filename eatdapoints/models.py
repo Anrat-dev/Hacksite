@@ -5,6 +5,10 @@ from django.conf import settings
 from django.utils import timezone
 
 # Create your models here.
+GAME_CHOICES =(
+    ("MealPlan", "MealPlan"),
+    ("CalorieCounting", "CalorieCounting")
+)
 
 class Meal(models.Model):
     meal_type = models.CharField(max_length=200, unique=True)
@@ -30,7 +34,7 @@ class GameType(models.Model):
 
 class UserGameType(models.Model):
     player = models.ForeignKey(User, on_delete=models.CASCADE)
-    game_type = models.CharField(max_length=50, unique=True)
+    game_type = models.CharField(max_length=25, choices=GAME_CHOICES, default="MealPlan")
 
     def __str__(self):
         return (self.player + '_' + self.game_type)
